@@ -1,22 +1,19 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import './App.css';
 import { styled } from "styled-components";
 
 export type InputLabel = {
   name: string
+  inputValue: number
+  onChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export const InputLabel: React.FC<InputLabel> = ({ name }) => {
-  let [inputValue, setInputValue] = useState<number>(0)
-
-  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(Number(e.currentTarget.value));
-  }
-
+export const InputLabel: React.FC<InputLabel> = ({ name, inputValue, onChangeHandler }) => {
+  console.log(inputValue)
   return (
     <InputLabelbox >
       <Label>{name}</Label>
-      <Input type="number" id="name" name="name" required value={inputValue} onChange={onChangeHandler} />
+      <Input type="number" id="name" name="name" required value={inputValue} onChange={onChangeHandler} className={inputValue < 0 ? "inputred" : ""} />
     </InputLabelbox>
   );
 }
@@ -32,8 +29,21 @@ const Label = styled.label`
   color: #6de0fd;
   font-size: 25px;
   font-weight: 600;
+   width: 27%;
 }`
 
 const Input = styled.input`
-border: 1px solid 6de0fd;
+    padding: 7px;
+    border: 1px solid #6de0fd;
+    background-color: #6de0fd;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 28px;
+    color: #2e323c;
+    width: 56%;
+    text-align: center;
+    &.inputred {
+       border: 1px solid #ff3b1f;
+       background-color: #ff3b1f;
+    }
 }`

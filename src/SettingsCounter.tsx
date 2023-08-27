@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import './App.css';
 import { ButtonComponent } from "./ButtonComponent";
 import { InputLabel } from "./InputLabel";
 import { WrapCounter, Wrapper } from "./style/_mainStyle";
 
-// export type SettingsCounter = {
+export type SettingsCounterProps = {
+  inputValueMax: number
+  inputValueStart: number
+  onChangeHandlerStart: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeHandlerMax: (e: ChangeEvent<HTMLInputElement>) => void
+  setHandler: () => void
+}
 
-// }
-
-export function SettingsCounter() {
-
+export const SettingsCounter: React.FC<SettingsCounterProps> = ({ inputValueMax, inputValueStart, onChangeHandlerMax, onChangeHandlerStart, setHandler }) => {
   return (
     <Wrapper>
       <WrapCounter>
-        < InputLabel name="max:" />
-        < InputLabel name="start:" />
+        < InputLabel name="start:" inputValue={inputValueStart} onChangeHandler={onChangeHandlerStart} />
+        < InputLabel name="max: " inputValue={inputValueMax} onChangeHandler={onChangeHandlerMax} />
       </WrapCounter>
-      <WrapCounter >
-        <ButtonComponent name="set" disabled={true} additionalClass={"class"} callBack={() => alert()} />
+      <WrapCounter className="flex">
+        <ButtonComponent name="set" disabled={true} additionalClass={"class"} callBack={setHandler} />
       </WrapCounter>
     </ Wrapper>
   );

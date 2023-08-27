@@ -50,6 +50,12 @@
   opacity: 0.2;
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* .red {
   color: red
 } */

@@ -7,9 +7,12 @@ export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 45px;
+  gap: 3px;
   padding: 25px;
-  height: 84%;
+  width: 280px;
+  border: 1px solid #6de0fd;
+  border-radius: 7px;
+  flex-direction: column;
 `;
 
 export const WrapCounter = styled.div`
@@ -17,4 +20,5 @@ export const WrapCounter = styled.div`
    border-radius: 7px;
    padding: 10px;
    margin-bottom: 15px;
+   width: 90%;
 `;
