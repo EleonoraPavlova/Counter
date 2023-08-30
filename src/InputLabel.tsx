@@ -5,15 +5,24 @@ import { styled } from "styled-components";
 export type InputLabel = {
   name: string
   inputValue: number
+  additionalClass?: string
   onChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void
+  onBlurHandler?: () => void
 }
 
-export const InputLabel: React.FC<InputLabel> = ({ name, inputValue, onChangeHandler }) => {
-  console.log(inputValue)
+export const InputLabel: React.FC<InputLabel> = ({ name, inputValue, onChangeHandler, onBlurHandler }) => {
+
+
   return (
     <InputLabelbox >
       <Label>{name}</Label>
-      <Input type="number" id="name" name="name" required value={inputValue} onChange={onChangeHandler} className={inputValue < 0 ? "inputred" : ""} />
+      <Input type="number" id="name" name="name"
+        value={inputValue}
+        onChange={onChangeHandler}
+        className={inputValue < 0 ? "inputred" : ""}
+        onBlur={onBlurHandler}
+        required
+      />
     </InputLabelbox>
   );
 }

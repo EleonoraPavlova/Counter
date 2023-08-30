@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { ButtonComponent } from "./ButtonComponent";
 import { styled } from "styled-components";
@@ -6,29 +6,51 @@ import { WrapCounter, Wrapper } from "./style/_mainStyle";
 
 export type CounterType = {
   output: number
-  start: number
-  max: number
-  isDisabled: boolean
+  start: number | null
+  max: number | null
+  error: string
+  press: string
+  isDisabledInc: boolean
+  isDisabledReset: boolean
   incHandler: () => void
   resetHandler: () => void
 }
 
-export const Counter: React.FC<CounterType> = ({ start, max, output, isDisabled, incHandler, resetHandler }) => {
+export const Counter: React.FC<CounterType> = ({ start, max,
+  output, error, press, isDisabledInc, isDisabledReset,
+  incHandler, resetHandler }) => {
+  console.log("press: ", press)
+  console.log("error: ", error)
 
   return (
     <Wrapper >
-      <WrapCounter >
-        <OutputStyle className={output === max ? "red" : ""}>{output}</OutputStyle>
+      <WrapCounter > {press === "" ?
+        <OutputStyle className={(output === max && output !== 0) ? "red" : ""} >{output}</OutputStyle>
+        :
+        error !== "" ?
+          <OutputStyle className="red">{error}</OutputStyle>
+          :
+          <OutputStyle>{press}</OutputStyle>
+      }
+
+        {/* {press ? : ""} */}
       </WrapCounter>
       <WrapCounter className="flex">
-        <ButtonComponent name="inc" disabled={isDisabled} additionalClass={output < max ? "" : "no-active"} callBack={incHandler} />
-        <ButtonComponent name="reset" disabled={isDisabled} additionalClass={output === 0 ? "no-active" : ""} callBack={resetHandler} />
+        <ButtonComponent name="inc"
+          disabled={isDisabledInc}
+          additionalClass={isDisabledInc ? "no-active" : ""}
+          callBack={incHandler} />
+        <ButtonComponent name="reset"
+          disabled={isDisabledReset}
+          additionalClass={(output === start) || !isDisabledReset || output !== max ? "no-active" : ""}
+          callBack={resetHandler} />
       </WrapCounter>
     </Wrapper >
   );
 }
+// additionalClass={output < max || !isDisabled ? "" : "no-active"}
 
-
+//    additionalClass={output === start || isDisabled ? "no-active" : ""}
 const OutputStyle = styled.p`
   border-radius: 7px;
   border: 1px solid #6de0fd;
@@ -37,6 +59,7 @@ const OutputStyle = styled.p`
   font-weight: 700;
   font-size: 30px;
   text-align: center;
+  color: #2e323c;
   &.red {
     color: red;
 }

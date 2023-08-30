@@ -1,52 +1,125 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
 import { Counter } from "./Counter";
 import { SettingsCounter } from "./SettingsCounter";
 import styled from "styled-components";
 
+
 function App() {
   let [output, setoutput] = useState<number>(0)
-  let [isDisabled, setDisabled] = useState<boolean>(true);
+
+  let [isDisabled, setDisabled] = useState<boolean>(false);
+  let [isDisabledReset, setDisabledReset] = useState<boolean>(false); //открыто
+  let [isDisabledInc, setisDisabledInc] = useState<boolean>(false); //открыто
+
   let [max, setMax] = useState<number>(0);
   let [start, setStart] = useState<number>(0);
-  // let [mistake, setMistake] = useState<string>("");
+
+  let [press, setPress] = useState<string>("");
+  let [error, setError] = useState<string>("");
+
+
+  useEffect(() => {
+    validation()
+  }, [start, max])
+
+  const validation = () => {
+    if (start === 0 && max === 0) {
+      setError("")
+      setDisabledReset(true)
+      setisDisabledInc(true)
+    } else if ((start < 0 || max < 0) || start === max || start > max) {
+      setError("incorrect value")
+      setDisabled(true)
+      setisDisabledInc(true)
+    } else {
+      setError("")
+      setDisabled(false)
+      setoutput(output)
+    }
+  }
 
   const onChangeHandlerStart = (e: ChangeEvent<HTMLInputElement>) => {
-    setStart(Number(e.currentTarget.value))
+    setStart(e.target.valueAsNumber)
+    if (!e.target.valueAsNumber) setStart(0)
+    if (e.target.valueAsNumber > 0) {
+      setPress("Enter values and press set")
+    }
   }
 
   const onChangeHandlerMax = (e: ChangeEvent<HTMLInputElement>) => {
-    setMax(Number(e.currentTarget.value))
+    setMax(e.target.valueAsNumber)
+    if (!e.target.valueAsNumber) setMax(0)
+    if (e.target.valueAsNumber > 0) {
+      setPress("Enter values and press set")
+    }
   }
 
-  //set
   const setHandler = () => {
     console.log("setHandler")
     setoutput(start)
-  }
-
-  //: setMistake("Value is not defined")
-
-  //output
-  const incHandler = () => {
-    if (output < 5) {
-      setoutput(output += 1)
+    setDisabledReset(true)
+    setisDisabledInc(false)
+    setPress("")
+    if (start === output) {
+      setDisabled(false)
     }
-    setDisabled(false)
   }
 
-  const resetHandler = () => setoutput(start)
+  const incHandler = () => {
+    console.log("incHandler")
+    setDisabled(true)
+    if (output < max) {
+      setoutput(prev => prev + 1)
+    }
+
+    if (output + 1 === max) {
+      setDisabledReset(false)
+      setisDisabledInc(true)
+    }
+  }
+
+
+  const resetHandler = () => {
+    console.log("resetHandler")
+    setoutput(start)
+    setDisabled(true)
+    setisDisabledInc(false)
+    if (output === start) {
+      setDisabledReset(true)
+    }
+    setDisabledReset(true)
+  }
+
+  const onBlurHandler = () => {
+    if (start && max) {
+      setDisabledReset(true)
+    }
+  }
+
 
   return (
     <AppWrapper >
       <SettingsCounter inputValueMax={max}
-        inputValueStart={start} onChangeHandlerStart={onChangeHandlerStart}
-        onChangeHandlerMax={onChangeHandlerMax} setHandler={setHandler} />
-      <Counter output={output} start={start} max={max} incHandler={incHandler} resetHandler={resetHandler} isDisabled={isDisabled} />
+        inputValueStart={start}
+        onChangeHandlerStart={onChangeHandlerStart}
+        onChangeHandlerMax={onChangeHandlerMax}
+        setHandler={setHandler}
+        isDisabled={isDisabled}
+        onBlurHandler={onBlurHandler}
+        max={max}
+      />
+      <Counter output={output}
+        start={start} max={max}
+        error={error}
+        press={press}
+        incHandler={incHandler}
+        resetHandler={resetHandler}
+        isDisabledInc={isDisabledInc}
+        isDisabledReset={isDisabledReset} />
     </AppWrapper >
   );
 }
-
 export default App;
 
 
@@ -57,3 +130,4 @@ const AppWrapper = styled.div`
   justify-content: center;
   gap: 45px;
 `;
+

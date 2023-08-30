@@ -48,6 +48,7 @@
 
 .no-active {
   opacity: 0.2;
+  cursor: none;
 }
 
 .flex {
@@ -56,6 +57,7 @@
   justify-content: center;
 }
 
-/* .red {
-  color: red
+/* .error {
+  border: 1px solid #ff3b1f;
+  background-color: #ff3b1f;
 } */

@@ -8,10 +8,17 @@ type ButtonProps = {
   disabled: boolean;
 }
 
-export const ButtonComponent: React.FC<ButtonProps> = ({ name, callBack, additionalClass }) => {
-  const onClickHandler = () => callBack();
+export const ButtonComponent: React.FC<ButtonProps> = ({ name, disabled, callBack, additionalClass }) => {
+  const onClickHandler = () => {
+    if (disabled) {
+      return
+    }
+    callBack();
+  }
 
-  return (<Button type="button" onClick={onClickHandler} className={additionalClass}> {name}</Button >)
+  return (<Button type="button" onClick={onClickHandler}
+    className={disabled ? "no-active" : ""}
+    disabled={disabled}> {name}</Button >)
 }
 
 
