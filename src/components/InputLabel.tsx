@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import './App.css';
+import '../App.css';
 import { styled } from "styled-components";
 
 export type InputLabel = {
@@ -12,7 +12,6 @@ export type InputLabel = {
 
 export const InputLabel: React.FC<InputLabel> = ({ name, inputValue, onChangeHandler, onBlurHandler }) => {
 
-
   return (
     <InputLabelbox >
       <Label>{name}</Label>
@@ -21,6 +20,7 @@ export const InputLabel: React.FC<InputLabel> = ({ name, inputValue, onChangeHan
         onChange={onChangeHandler}
         className={inputValue < 0 ? "inputred" : ""}
         onBlur={onBlurHandler}
+        pattern="/^\d{1,10}$/"
         required
       />
     </InputLabelbox>

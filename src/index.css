@@ -25,3 +25,14 @@ input[type="number"]:focus {
   appearance: none;
   -moz-appearance: textfield;
 }
+
+.no-active {
+  opacity: 0.2;
+  cursor: none;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

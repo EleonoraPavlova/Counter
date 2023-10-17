@@ -1,26 +1,26 @@
 import React from 'react';
-import './App.css';
+import '../App.css';
 import { ButtonComponent } from "./ButtonComponent";
 import { styled } from "styled-components";
-import { WrapCounter, Wrapper } from "./style/_mainStyle";
+import { WrapCounter, Wrapper } from "../style/_mainStyle";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { errorMessageSelector, isDisabledIncSelector, isDisabledResetSelector, maxSelector, outputSelector, pressMessageSelector, startSelector } from "../state/selectors/counterSelectors";
+
 
 export type CounterType = {
-  output: number
-  start: number | null
-  max: number | null
-  error: string
-  press: string
-  isDisabledInc: boolean
-  isDisabledReset: boolean
   incHandler: () => void
   resetHandler: () => void
 }
 
-export const Counter: React.FC<CounterType> = ({ start, max,
-  output, error, press, isDisabledInc, isDisabledReset,
-  incHandler, resetHandler }) => {
-  console.log("press: ", press)
-  console.log("error: ", error)
+export const Counter: React.FC<CounterType> = ({ incHandler, resetHandler }) => {
+  const output = useSelector(outputSelector)
+  const error = useSelector(errorMessageSelector)
+  const press = useSelector(pressMessageSelector)
+  const max = useSelector(maxSelector)
+  const isDisabledReset = useSelector(isDisabledResetSelector)
+  const isDisabledInc = useSelector(isDisabledIncSelector)
+  const start = useSelector(startSelector)
 
   return (
     <Wrapper >
@@ -32,8 +32,6 @@ export const Counter: React.FC<CounterType> = ({ start, max,
           :
           <OutputStyle>{press}</OutputStyle>
       }
-
-        {/* {press ? : ""} */}
       </WrapCounter>
       <WrapCounter className="flex">
         <ButtonComponent name="inc"
@@ -48,7 +46,6 @@ export const Counter: React.FC<CounterType> = ({ start, max,
     </Wrapper >
   );
 }
-// additionalClass={output < max || !isDisabled ? "" : "no-active"}
 
 //    additionalClass={output === start || isDisabled ? "no-active" : ""}
 const OutputStyle = styled.p`

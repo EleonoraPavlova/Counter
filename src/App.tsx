@@ -1,122 +1,142 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import './App.css';
-import { Counter } from "./Counter";
-import { SettingsCounter } from "./SettingsCounter";
+import { Counter } from "./components/Counter";
+import { SettingsCounter } from "./components/SettingsCounter";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  DisabledAC, DisabledIncAC,
+  DisabledResetAC, IncrementDecremenAC, SetErrorAC, SetMaxAC,
+  SetOutputAC, SetPressAC, SetStartAC
+} from "./state/reducer/counterReducer";
+import {
+  maxSelector,
+  outputSelector, startSelector
+} from "./state/selectors/counterSelectors";
 
+
+const warning = "Enter values and press set"
 
 function App() {
-  let [output, setoutput] = useState<number>(0)
+  const output = useSelector(outputSelector)
+  const max = useSelector(maxSelector)
+  const start = useSelector(startSelector)
 
-  let [isDisabled, setDisabled] = useState<boolean>(false);
-  let [isDisabledReset, setDisabledReset] = useState<boolean>(false); //открыто
-  let [isDisabledInc, setisDisabledInc] = useState<boolean>(false); //открыто
+  const dispatch = useDispatch()
 
-  let [max, setMax] = useState<number>(0);
-  let [start, setStart] = useState<number>(0);
-
-  let [press, setPress] = useState<string>("");
-  let [error, setError] = useState<string>("");
-
+  // useEffect(() => {
+  //   getlocalStorageHandler()
+  // }, [])
 
   useEffect(() => {
     validation()
-  }, [start, max])
+  }, [start, max]) //зависимости!!! попадает сюда каждый раз, как меняется start/max
+  //если пустой [] - useEffect отрабатывает единижды
 
   const validation = () => {
     if (start === 0 && max === 0) {
-      setError("")
-      setDisabledReset(true)
-      setisDisabledInc(true)
+      dispatch(SetErrorAC(""))
+      dispatch(DisabledResetAC(true))
+      dispatch(DisabledIncAC(true))
     } else if ((start < 0 || max < 0) || start === max || start > max) {
-      setError("incorrect value")
-      setDisabled(true)
-      setisDisabledInc(true)
+      dispatch(SetErrorAC("incorrect value"))
+      dispatch(DisabledAC(true))
+      dispatch(DisabledIncAC(true))
     } else {
-      setError("")
-      setDisabled(false)
-      setoutput(output)
+      dispatch(SetErrorAC(""))
+      dispatch(DisabledAC(false))
+      dispatch(SetOutputAC(output))
     }
+    // setlocalStorageHandler()
   }
 
+  // const setlocalStorageHandler = () => {
+  //   localStorage.setItem("valueStart", JSON.stringify(start))
+  //   localStorage.setItem("valueMax", JSON.stringify(max))
+  //   localStorage.setItem("valuePress", press)
+  //   localStorage.setItem("valueError", error)
+  // }
+
+  // const getlocalStorageHandler = () => {
+  //   let startString = localStorage.getItem("valueStart")
+  //   let maxString = localStorage.getItem("valueMax")
+  //   let pressValue = localStorage.getItem("valuePress")
+  //   let errorValue = localStorage.getItem("valueError")
+
+  //   if (startString) setStart(JSON.parse(startString))
+  //   if (maxString) setMax(JSON.parse(maxString))
+
+  //   if (pressValue) setPress(pressValue)
+  //   if (errorValue) setError(errorValue)
+  // }
+
   const onChangeHandlerStart = (e: ChangeEvent<HTMLInputElement>) => {
-    setStart(e.target.valueAsNumber)
-    if (!e.target.valueAsNumber) setStart(0)
+    dispatch(SetStartAC(e.target.valueAsNumber))
+    if (!e.target.valueAsNumber) dispatch(SetStartAC(0))
     if (e.target.valueAsNumber > 0) {
-      setPress("Enter values and press set")
+      dispatch(SetPressAC(warning))
     }
   }
 
   const onChangeHandlerMax = (e: ChangeEvent<HTMLInputElement>) => {
-    setMax(e.target.valueAsNumber)
-    if (!e.target.valueAsNumber) setMax(0)
+    dispatch(SetMaxAC(e.target.valueAsNumber))
+    if (!e.target.valueAsNumber) dispatch(SetMaxAC(0))
     if (e.target.valueAsNumber > 0) {
-      setPress("Enter values and press set")
+      dispatch(SetPressAC(warning))
     }
   }
 
   const setHandler = () => {
-    console.log("setHandler")
-    setoutput(start)
-    setDisabledReset(true)
-    setisDisabledInc(false)
-    setPress("")
+    dispatch(SetOutputAC(start))
+    dispatch(DisabledResetAC(true))
+    dispatch(DisabledIncAC(false))
+    dispatch(SetPressAC(""))
     if (start === output) {
-      setDisabled(false)
+      dispatch(DisabledAC(false))
     }
   }
 
   const incHandler = () => {
-    console.log("incHandler")
-    setDisabled(true)
+    dispatch(DisabledAC(true))
     if (output < max) {
-      setoutput(prev => prev + 1)
+      dispatch(SetOutputAC(output + 1))
     }
 
     if (output + 1 === max) {
-      setDisabledReset(false)
-      setisDisabledInc(true)
+      dispatch(DisabledResetAC(false))
+      dispatch(DisabledIncAC(true))
     }
   }
 
 
   const resetHandler = () => {
-    console.log("resetHandler")
-    setoutput(start)
-    setDisabled(true)
-    setisDisabledInc(false)
+    dispatch(SetOutputAC(start))
+    dispatch(DisabledAC(true))
+    dispatch(DisabledIncAC(false))
     if (output === start) {
-      setDisabledReset(true)
+      dispatch(DisabledResetAC(true))
     }
-    setDisabledReset(true)
+    dispatch(DisabledResetAC(true))
   }
 
   const onBlurHandler = () => {
     if (start && max) {
-      setDisabledReset(true)
+      dispatch(DisabledResetAC(true))
     }
   }
 
 
   return (
     <AppWrapper >
-      <SettingsCounter inputValueMax={max}
-        inputValueStart={start}
+      <SettingsCounter
         onChangeHandlerStart={onChangeHandlerStart}
         onChangeHandlerMax={onChangeHandlerMax}
         setHandler={setHandler}
-        isDisabled={isDisabled}
         onBlurHandler={onBlurHandler}
-        max={max}
       />
-      <Counter output={output}
-        start={start} max={max}
-        error={error}
-        press={press}
+      <Counter
         incHandler={incHandler}
-        resetHandler={resetHandler}
-        isDisabledInc={isDisabledInc}
-        isDisabledReset={isDisabledReset} />
+        resetHandler={resetHandler} />
     </AppWrapper >
   );
 }
