@@ -3,9 +3,8 @@ import '../App.css';
 import { ButtonComponent } from "./ButtonComponent";
 import { styled } from "styled-components";
 import { WrapCounter, Wrapper } from "../style/_mainStyle";
-import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { errorMessageSelector, isDisabledIncSelector, isDisabledResetSelector, maxSelector, outputSelector, pressMessageSelector, startSelector } from "../state/selectors/counterSelectors";
+import { errorMessageSelector, isDisabledIncSelector, isDisabledResetSelector, maxSelector, outputSelector, pressMessageSelector, startSelector } from "../bll/selectors/counterSelectors";
 
 
 export type CounterType = {
@@ -47,7 +46,6 @@ export const Counter: React.FC<CounterType> = ({ incHandler, resetHandler }) => 
   );
 }
 
-//    additionalClass={output === start || isDisabled ? "no-active" : ""}
 const OutputStyle = styled.p`
   border-radius: 7px;
   border: 1px solid #6de0fd;
@@ -61,4 +59,3 @@ const OutputStyle = styled.p`
     color: red;
 }
 }`
-

@@ -6,14 +6,14 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DisabledAC, DisabledIncAC,
-  DisabledResetAC, IncrementDecremenAC, SetErrorAC, SetMaxAC,
+  DisabledResetAC, SetErrorAC, SetMaxAC,
   SetOutputAC, SetPressAC, SetStartAC
-} from "./state/reducer/counterReducer";
+} from "./bll/reducer/counterReducer";
 import {
   maxSelector,
   outputSelector, startSelector
-} from "./state/selectors/counterSelectors";
-
+} from "./bll/selectors/counterSelectors";
+import { AppDispatchType } from "./bll/store";
 
 const warning = "Enter values and press set"
 
@@ -22,16 +22,11 @@ function App() {
   const max = useSelector(maxSelector)
   const start = useSelector(startSelector)
 
-  const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   getlocalStorageHandler()
-  // }, [])
+  const dispatch = useDispatch<AppDispatchType>()
 
   useEffect(() => {
     validation()
-  }, [start, max]) //зависимости!!! попадает сюда каждый раз, как меняется start/max
-  //если пустой [] - useEffect отрабатывает единижды
+  }, [dispatch, start, max])
 
   const validation = () => {
     if (start === 0 && max === 0) {
@@ -47,28 +42,8 @@ function App() {
       dispatch(DisabledAC(false))
       dispatch(SetOutputAC(output))
     }
-    // setlocalStorageHandler()
   }
 
-  // const setlocalStorageHandler = () => {
-  //   localStorage.setItem("valueStart", JSON.stringify(start))
-  //   localStorage.setItem("valueMax", JSON.stringify(max))
-  //   localStorage.setItem("valuePress", press)
-  //   localStorage.setItem("valueError", error)
-  // }
-
-  // const getlocalStorageHandler = () => {
-  //   let startString = localStorage.getItem("valueStart")
-  //   let maxString = localStorage.getItem("valueMax")
-  //   let pressValue = localStorage.getItem("valuePress")
-  //   let errorValue = localStorage.getItem("valueError")
-
-  //   if (startString) setStart(JSON.parse(startString))
-  //   if (maxString) setMax(JSON.parse(maxString))
-
-  //   if (pressValue) setPress(pressValue)
-  //   if (errorValue) setError(errorValue)
-  // }
 
   const onChangeHandlerStart = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(SetStartAC(e.target.valueAsNumber))
@@ -120,9 +95,7 @@ function App() {
   }
 
   const onBlurHandler = () => {
-    if (start && max) {
-      dispatch(DisabledResetAC(true))
-    }
+    if (start && max) dispatch(DisabledResetAC(true))
   }
 
 
@@ -144,10 +117,9 @@ export default App;
 
 
 const AppWrapper = styled.div`
-   margin: 5% 0;
+  margin: 5% 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 45px;
 `;
-

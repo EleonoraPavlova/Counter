@@ -3,7 +3,7 @@ import '../App.css';
 import { ButtonComponent } from "./ButtonComponent";
 import { InputLabel } from "./InputLabel";
 import { WrapCounter, Wrapper } from "../style/_mainStyle";
-import { isDisabledSelector, maxSelector, startSelector } from "../state/selectors/counterSelectors";
+import { isDisabledSelector, maxSelector, startSelector } from "../bll/selectors/counterSelectors";
 import { useSelector } from "react-redux";
 
 export type SettingsCounterProps = {

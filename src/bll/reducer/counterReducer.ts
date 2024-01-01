@@ -1,4 +1,7 @@
-export type IncrementDecremenType = ReturnType<typeof IncrementDecremenAC>
+import { Dispatch } from "redux"
+import { AppRootState, AppThunkType } from "../store"
+
+//export type IncrementDecremenType = ReturnType<typeof IncrementDecremenAC>
 export type SetOutputType = ReturnType<typeof SetOutputAC>
 export type DisabledType = ReturnType<typeof DisabledAC>
 export type DisabledResetType = ReturnType<typeof DisabledResetAC>
@@ -9,7 +12,7 @@ export type SetStartType = ReturnType<typeof SetStartAC>
 export type SetMaxType = ReturnType<typeof SetMaxAC>
 
 
-export type ActionCounterType = IncrementDecremenType
+export type ActionCounterType =
   | SetOutputType
   | DisabledType
   | DisabledResetType
@@ -20,17 +23,7 @@ export type ActionCounterType = IncrementDecremenType
   | SetMaxType
 
 
-export type StateType = {
-  output: number
-  isDisabled: boolean
-  isDisabledReset: boolean
-  isDisabledInc: boolean
-  max: number
-  start: number
-  errorMessage: string
-  pressMessage: string
-}
-const initialState: StateType = {
+const initialState = {
   output: 0,
   isDisabled: false, //open
   isDisabledReset: false,
@@ -41,10 +34,10 @@ const initialState: StateType = {
   pressMessage: '',
 }
 
-export const counterReducer = (state = initialState, action: ActionCounterType): StateType => {
+export type StateType = typeof initialState
+
+export const counterReducer = (state: StateType = initialState, action: ActionCounterType): StateType => {
   switch (action.type) {
-    case "INCREMENT_DECREMENT":
-      return { ...state, output: state.output }
     case "SET_OUTPUT":
       return { ...state, output: action.payload }
     case "DISABLED":
@@ -63,13 +56,6 @@ export const counterReducer = (state = initialState, action: ActionCounterType):
       return { ...state, max: action.payload };
     default: return state
   }
-}
-
-
-export const IncrementDecremenAC = () => {
-  return {
-    type: "INCREMENT_DECREMENT"
-  } as const
 }
 
 
@@ -130,4 +116,3 @@ export const SetMaxAC = (payload: number) => {
     payload
   } as const
 }
-
