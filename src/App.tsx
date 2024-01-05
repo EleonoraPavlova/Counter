@@ -44,21 +44,13 @@ function App() {
     }
   }
 
-
-  const onChangeHandlerStart = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(SetStartAC(e.target.valueAsNumber))
-    if (!e.target.valueAsNumber) dispatch(SetStartAC(0))
-    if (e.target.valueAsNumber > 0) {
-      dispatch(SetPressAC(warning))
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>, type: 'start' | 'max') => {
+    const value = e.currentTarget.valueAsNumber;
+    if (/^\d{1,5}$/.test(String(value))) {
+      dispatch(type === 'start' ? SetStartAC(Number.isNaN(value) ? 0 : Math.trunc(value)) : SetMaxAC(Number.isNaN(value) ? 0 : Math.trunc(value)));
+      if (value > 0) dispatch(SetPressAC(warning));
     }
-  }
-
-  const onChangeHandlerMax = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(SetMaxAC(e.target.valueAsNumber))
-    if (!e.target.valueAsNumber) dispatch(SetMaxAC(0))
-    if (e.target.valueAsNumber > 0) {
-      dispatch(SetPressAC(warning))
-    }
+    if (!value) dispatch(type === 'start' ? SetStartAC(0) : SetMaxAC(0));
   }
 
   const setHandler = () => {
@@ -102,8 +94,8 @@ function App() {
   return (
     <AppWrapper >
       <SettingsCounter
-        onChangeHandlerStart={onChangeHandlerStart}
-        onChangeHandlerMax={onChangeHandlerMax}
+        onChangeHandlerStart={(e) => onChangeHandler(e, "start")}
+        onChangeHandlerMax={(e) => onChangeHandler(e, "max")}
         setHandler={setHandler}
         onBlurHandler={onBlurHandler}
       />

@@ -1,7 +1,3 @@
-import { Dispatch } from "redux"
-import { AppRootState, AppThunkType } from "../store"
-
-//export type IncrementDecremenType = ReturnType<typeof IncrementDecremenAC>
 export type SetOutputType = ReturnType<typeof SetOutputAC>
 export type DisabledType = ReturnType<typeof DisabledAC>
 export type DisabledResetType = ReturnType<typeof DisabledResetAC>
